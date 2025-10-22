@@ -1,66 +1,37 @@
-## Foundry
+# Uniswap V4 Learn
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Learning Uniswap's V4 Router.
 
-Foundry consists of:
+## Test
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+### ENV
 
-## Documentation
+In order to run a successful test you must add an `.env` file with a `FORK_URL` variable with a value of an RPC URL from your RPC provider.
 
-https://book.getfoundry.sh/
+### Run Test
 
-## Usage
+Run the test with the following command:
 
-### Build
-
-```shell
-$ forge build
+```bash
+forge test --fork-url $FORK_URL -vvv
 ```
 
-### Test
+Passing tests should print a similar output to console as the below:
 
-```shell
-$ forge test
+```bash
+[⠊] Compiling...
+No files changed, compilation skipped
+
+Ran 1 test for test/Flash.t.sol:FlashTest
+[PASS] test_flash() (gas: 83969)
+Logs:
+  Borrowed amount: 1e9 USDC
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 1.33s (636.08ms CPU time)
+
+Ran 1 test suite in 1.73s (1.33s CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)
 ```
 
-### Format
+# Resources
 
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+This is test example from Cyfrin Updraft's [Uniswap V4 course](https://github.com/Cyfrin/defi-uniswap-v4).
