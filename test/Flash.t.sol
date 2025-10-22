@@ -11,6 +11,7 @@ contract FlashTest is Test {
     uint256 public coinBalance;
 
     Flash flash;
+
     receive() external payable {}
 
     function setUp() public {
