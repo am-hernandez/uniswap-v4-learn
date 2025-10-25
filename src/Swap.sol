@@ -66,19 +66,21 @@ contract Swap is IUnlockCallback {
         // require amount out to be greater than amount out min
         require(amountOut >= int128(params.amountOutMin), "amount out less than amount out min");
 
-        // take
-        poolManager.take({currency: currencyOut, to: sender, amount: uint256(-int256(amountOut))});
+        // take output
+        poolManager.take({currency: currencyOut, to: sender, amount: uint256(uint128(amountOut))});
 
-        // sync
-        poolManager.sync({currency: currencyIn});
+        // sync only for ERC20 before settle
+        if (!currencyIn.isAddressZero()) {
+            poolManager.sync({currency: currencyIn});
+        }
 
-        // settle
+        // settle input
         if (currencyIn.isAddressZero()) {
             // settle native currency
-            poolManager.settle{value: uint256(-int256(amountIn))}();
+            poolManager.settle{value: uint256(uint128(amountIn))}();
         } else {
             // settle ERC20 currency
-            IERC20(Currency.unwrap(currencyIn)).transfer(address(poolManager), uint256(-int256(amountIn)));
+            IERC20(Currency.unwrap(currencyIn)).transfer(address(poolManager), uint256(uint128(amountIn)));
             poolManager.settle();
         }
 
@@ -87,17 +89,27 @@ contract Swap is IUnlockCallback {
     }
 
     function swap(SwapExactInputSingleHop calldata params) external payable {
-        // get currency in depending on zeroForOne
-        // params.zeroForOne means “swap token0 → token1”. If false, it’s token1 → token0.
+        // Determine input currency
         Currency currencyIn = params.zeroForOne ? params.poolKey.currency0 : params.poolKey.currency1;
 
-        IERC20(Currency.unwrap(currencyIn)).transferFrom(msg.sender, address(this), uint256(params.amountIn));
+        if (currencyIn.isAddressZero()) {
+            // Native ETH path: user must send exact ETH equal to amountIn
+            require(msg.value == uint256(params.amountIn), "invalid msg.value");
+        } else {
+            // ERC20 path: pull tokens from sender into this contract; manager will be settled in callback
+            IERC20(Currency.unwrap(currencyIn)).transferFrom(msg.sender, address(this), uint256(params.amountIn));
+        }
+
         poolManager.unlock(abi.encode(msg.sender, params));
 
-        // Refund
+        // Refund any leftover input currency back to the caller
         uint256 bal = currencyIn.balanceOf(address(this));
         if (bal > 0) {
-            IERC20(Currency.unwrap(currencyIn)).transfer(msg.sender, bal);
+            if (currencyIn.isAddressZero()) {
+                payable(msg.sender).transfer(bal);
+            } else {
+                IERC20(Currency.unwrap(currencyIn)).transfer(msg.sender, bal);
+            }
         }
     }
 }
