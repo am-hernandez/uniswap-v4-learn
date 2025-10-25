@@ -12,6 +12,7 @@ contract ReaderTest is Test {
     Reader reader;
     IPoolManager poolManager;
     IERC20 constant usdc = IERC20(USDC);
+    uint256 constant USDC_AMOUNT = 100 * 1e6;
 
     function setUp() public {
         reader = new Reader(POOL_MANAGER);
@@ -30,7 +31,7 @@ contract ReaderTest is Test {
         assertEq(deltaBefore, 0);
 
         // take 100 USDC
-        poolManager.take(Currency.wrap(USDC), address(this), 100000000);
+        poolManager.take(Currency.wrap(USDC), address(this), USDC_AMOUNT);
 
         // get the delta after the take
         int256 deltaAfter = reader.getCurrencyDelta(address(this), USDC);
@@ -40,7 +41,7 @@ contract ReaderTest is Test {
         poolManager.sync(Currency.wrap(USDC));
 
         // pay and settle 100 USDC
-        usdc.transfer(address(poolManager), 100000000);
+        usdc.transfer(address(poolManager), USDC_AMOUNT);
         poolManager.settle();
 
         // get the delta after the settle
