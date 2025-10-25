@@ -47,12 +47,7 @@ contract SwapTest is Test, TestHelper {
 
         uint128 amountIn = 1e18;
         swap.swap{value: uint256(amountIn)}(
-            Swap.SwapExactInputSingleHop({
-                poolKey: poolKey,
-                zeroForOne: true,
-                amountIn: amountIn,
-                amountOutMin: 1
-            })
+            Swap.SwapExactInputSingleHop({poolKey: poolKey, zeroForOne: true, amountIn: amountIn, amountOutMin: 1})
         );
 
         helper.set("After swap USDC", usdc.balanceOf(address(this)));
@@ -75,12 +70,7 @@ contract SwapTest is Test, TestHelper {
 
         uint128 amountIn = 1000 * 1e6;
         swap.swap{value: uint256(amountIn)}(
-            Swap.SwapExactInputSingleHop({
-                poolKey: poolKey,
-                zeroForOne: false,
-                amountIn: amountIn,
-                amountOutMin: 1
-            })
+            Swap.SwapExactInputSingleHop({poolKey: poolKey, zeroForOne: false, amountIn: amountIn, amountOutMin: 1})
         );
 
         helper.set("After swap USDC", usdc.balanceOf(address(this)));

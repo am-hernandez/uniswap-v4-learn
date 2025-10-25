@@ -12,11 +12,7 @@ contract TestHelper {
         return vals[key];
     }
 
-    function delta(string memory key0, string memory key1)
-        public
-        view
-        returns (int256)
-    {
+    function delta(string memory key0, string memory key1) public view returns (int256) {
         return int256(vals[key0]) - int256(vals[key1]);
     }
 }
