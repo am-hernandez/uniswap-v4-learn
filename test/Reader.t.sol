@@ -24,7 +24,7 @@ contract ReaderTest is Test {
     }
 
     // handle the unlock callback
-    function unlockCallback(bytes calldata data) external returns (bytes memory) {
+    function unlockCallback(bytes calldata) external returns (bytes memory) {
         // get the delta before the take
         int256 deltaBefore = reader.getCurrencyDelta(address(this), USDC);
         assertEq(deltaBefore, 0);
