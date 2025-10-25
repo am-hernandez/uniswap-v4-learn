@@ -31,7 +31,9 @@ contract SwapTest is Test, TestHelper {
         // approve the swap contract to spend the USDC
         usdc.approve(address(swap), type(uint256).max);
 
-        poolKey = PoolKey({currency0: nativeCurrency, currency1: usdcCurrency, fee: 500, tickSpacing: 10, hooks: IHooks(address(0))});
+        poolKey = PoolKey({
+            currency0: nativeCurrency, currency1: usdcCurrency, fee: 500, tickSpacing: 10, hooks: IHooks(address(0))
+        });
     }
 
     function test_swapExactInputSingle_ETH_USDC() public {
