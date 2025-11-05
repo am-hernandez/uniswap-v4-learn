@@ -22,9 +22,7 @@ contract FindHookSaltTest is Test {
 
         // 2. Assemble the flag mask that represents the callbacks implemented by CounterHook.
         uint160 desiredFlags = uint160(
-            Hooks.BEFORE_ADD_LIQUIDITY_FLAG
-                | Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG
-                | Hooks.BEFORE_SWAP_FLAG
+            Hooks.BEFORE_ADD_LIQUIDITY_FLAG | Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG | Hooks.BEFORE_SWAP_FLAG
                 | Hooks.AFTER_SWAP_FLAG
         );
 
