@@ -199,7 +199,7 @@ contract CounterHookTest is Test {
     function test_liquidity() public {
         // Set the action to add liquidity.
         action = ADD_LIQUIDITY;
-        console.log("Adding liquidity test 1");
+
         // Unlock the pool manager.
         poolManager.unlock("");
         assertEq(hook.getHookCount(key.toId(), CounterHook.CounterType.BeforeAddLiquidity), 1);
@@ -207,7 +207,7 @@ contract CounterHookTest is Test {
 
         // Set the action to remove liquidity.
         action = REMOVE_LIQUIDITY;
-        console.log("Removing liquidity test");
+
         // Unlock the pool manager.
         poolManager.unlock("");
         assertEq(hook.getHookCount(key.toId(), CounterHook.CounterType.BeforeRemoveLiquidity), 1);
