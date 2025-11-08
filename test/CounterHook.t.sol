@@ -123,10 +123,8 @@ contract CounterHookTest is Test {
 
             // get amounts for token 0 and token 1.
             if (delta.amount0() < 0) {
-
                 // if token 0 is negative
                 uint256 amount0 = uint128(-delta.amount0());
-
 
                 // sync
                 poolManager.sync(key.currency0);
@@ -135,10 +133,8 @@ contract CounterHookTest is Test {
                 poolManager.settle{value: amount0}();
             }
             if (delta.amount1() < 0) {
-
                 // if token 1 is negative
                 uint256 amount1 = uint128(-delta.amount1());
-
 
                 // deal USDC to the contract.
                 deal(USDC, address(this), amount1);
@@ -154,7 +150,6 @@ contract CounterHookTest is Test {
             }
             return "";
         } else if (action == REMOVE_LIQUIDITY) {
-
             // remove liquidity.
             (BalanceDelta delta,) = poolManager.modifyLiquidity({
                 key: key,
@@ -172,14 +167,12 @@ contract CounterHookTest is Test {
                 // if token 0 is positive
                 uint256 amount0 = uint128(delta.amount0());
 
-
                 // sync
                 poolManager.take({currency: key.currency0, to: address(this), amount: amount0});
             }
             if (delta.amount1() > 0) {
                 // if token 1 is positive
                 uint256 amount1 = uint128(delta.amount1());
-
 
                 // sync
                 poolManager.take({currency: key.currency1, to: address(this), amount: amount1});
@@ -212,6 +205,14 @@ contract CounterHookTest is Test {
         poolManager.unlock("");
         assertEq(hook.getHookCount(key.toId(), CounterHook.CounterType.BeforeRemoveLiquidity), 1);
         assertEq(hook.getHookCount(key.toId(), CounterHook.CounterType.AfterRemoveLiquidity), 0);
+    }
+
+    function test_swap() public {
+        action = SWAP;
+        deal(USDC, address(this), 100 * 1e6);
+        poolManager.unlock("");
+        assertEq(hook.getHookCount(key.toId(), CounterHook.CounterType.BeforeSwap), 1);
+        assertEq(hook.getHookCount(key.toId(), CounterHook.CounterType.AfterSwap), 1);
     }
 
     /// @dev Sanity-check that the PoolManager gate actually protects each hook callback.
